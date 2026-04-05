@@ -1,0 +1,1 @@
+Contem os scripts JavaScript responsaveis pela interatividade e renderizacao dos graficos. 

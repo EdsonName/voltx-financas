@@ -1,0 +1,1 @@
+Contem os arquivos HTML, CSS e JS que formam a interface do usuario (Dashboard). 

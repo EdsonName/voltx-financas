@@ -1,0 +1,1 @@
+Armazena o arquivo financas.db (SQLite) gerado automaticamente. O banco de dados nao deve ser commitado no Git. 
