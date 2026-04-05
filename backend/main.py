@@ -1,3 +1,5 @@
+
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -42,3 +44,34 @@ def obter_resumo_mes(ano: int, mes: int):
         "dias_uteis_totais": dias_uteis,
         "feriados": feriados
     }
+
+@app.put("/transacoes/{transacao_id}", response_model=schemas.TransacaoOut)
+def atualizar_transacao(transacao_id: int, transacao: schemas.TransacaoCreate, db: Session = Depends(database.get_db)):
+    # Busca a transação pelo ID no banco de dados
+    db_transacao = db.query(models.Transacao).filter(models.Transacao.id == transacao_id).first()
+    
+    # Se não encontrar, retorna um erro 404
+    if db_transacao is None:
+        raise HTTPException(status_code=404, detail="Transação não encontrada")
+    
+    # Atualiza os dados no banco
+    for key, value in transacao.model_dump().items():
+        setattr(db_transacao, key, value)
+        
+    db.commit()
+    db.refresh(db_transacao)
+    return db_transacao
+
+@app.delete("/transacoes/{transacao_id}")
+def deletar_transacao(transacao_id: int, db: Session = Depends(database.get_db)):
+    # Busca a transação pelo ID
+    db_transacao = db.query(models.Transacao).filter(models.Transacao.id == transacao_id).first()
+    
+    # Se não encontrar, retorna um erro 404
+    if db_transacao is None:
+        raise HTTPException(status_code=404, detail="Transação não encontrada")
+    
+    # Deleta do banco e salva a alteração
+    db.delete(db_transacao)
+    db.commit()
+    return {"mensagem": "Transação deletada com sucesso"}
