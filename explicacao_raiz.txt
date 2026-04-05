@@ -1,1 +1,27 @@
 Pasta raiz do projeto. Contem as dependencias e configuracoes gerais. 
+
+
+financas_app/
+├── explicacao_raiz.txt      # Explica a função da pasta raiz e do projeto.
+├── requirements.txt         # Lista das bibliotecas Python que vamos instalar.
+├── .gitignore               # Arquivos e pastas que o Git deve ignorar (como o banco de dados e ambientes virtuais).
+├── backend/
+│   ├── explicacao_backend.txt # Explica a arquitetura da API.
+│   ├── main.py              # Ponto de entrada da API (FastAPI).
+│   ├── database.py          # Configuração da conexão com o banco SQLite.
+│   ├── models.py            # Modelos das tabelas de receitas e despesas.
+│   ├── schemas.py           # Validação de dados de entrada/saída (Pydantic).
+│   └── utils.py             # Lógica de cálculo de dias úteis, feriados e ganhos diários.
+├── frontend/
+│   ├── explicacao_frontend.txt # Explica a camada visual.
+│   ├── index.html           # O Dashboard principal.
+│   ├── css/
+│   │   ├── explicacao_css.txt
+│   │   └── style.css        # Estilização visual (cores, layout).
+│   └── js/
+│       ├── explicacao_js.txt
+│       ├── app.js           # Funções de CRUD (adicionar, editar, deletar) e comunicação com a API.
+│       └── charts.js        # Configuração dos gráficos (pizza e barras) e eventos de clique.
+└── data/
+    ├── explicacao_data.txt  # Explica que aqui reside o banco de dados local.
+    └── (financas.db)        # Será gerado automaticamente, não precisamos criar agora.

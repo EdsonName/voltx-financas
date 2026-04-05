@@ -1,0 +1,9 @@
+Contem toda a logica da API em Python (FastAPI), regras de negocio e conexao com banco de dados. 
+
+backend/
+│   ├── explicacao_backend.txt # Explica a arquitetura da API.
+│   ├── main.py              # Ponto de entrada da API (FastAPI).
+│   ├── database.py          # Configuração da conexão com o banco SQLite.
+│   ├── models.py            # Modelos das tabelas de receitas e despesas.
+│   ├── schemas.py           # Validação de dados de entrada/saída (Pydantic).
+│   └── utils.py             # Lógica de cálculo de dias úteis, feriados e ganhos diários.

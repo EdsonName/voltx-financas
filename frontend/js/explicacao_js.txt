@@ -1,1 +1,6 @@
 Contem os scripts JavaScript responsaveis pela interatividade e renderizacao dos graficos. 
+
+└── js/
+│       ├── explicacao_js.txt
+│       ├── app.js           # Funções de CRUD (adicionar, editar, deletar) e comunicação com a API.
+│       └── charts.js        # Configuração dos gráficos (pizza e barras) e eventos de clique.

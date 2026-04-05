@@ -1,1 +1,8 @@
 Contem os arquivos HTML, CSS e JS que formam a interface do usuario (Dashboard). 
+
+frontend/
+│   ├── explicacao_frontend.txt # Explica a camada visual.
+│   ├── index.html           # O Dashboard principal.
+│   ├── css/
+│   │   ├── explicacao_css.txt
+│   │   └── style.css        # Estilização visual (cores, layout).
