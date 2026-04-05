@@ -29,3 +29,32 @@ financas_app/
 ├── frontend/       # Interface do Usuário (HTML, CSS, JS)
 ├── data/           # Banco de Dados Local (SQLite)
 └── requirements.txt # Dependências do Projeto
+
+🔧 Como Executar
+Clone o repositório:
+
+Bash
+
+git clone [https://github.com/EdsonName/voltx-financas.git](https://github.com/EdsonName/voltx-financas.git)
+cd voltx-financas
+Instale as dependências:
+
+Bash
+
+py -m pip install -r requirements.txt
+Inicie o servidor Backend:
+
+Bash
+
+py -m uvicorn backend.main:app --reload
+Acesse a interface:
+Abra o arquivo frontend/index.html em seu navegador preferido.
+
+📈 Próximos Passos (v0.0.2)
+[ ] Implementação de edição e exclusão de itens diretamente pela interface.
+
+[ ] Gráfico de barras com funcionalidade de drill-down (clique para ver detalhes).
+
+[ ] Categorização automática e filtros por período.
+
+Desenvolvido por Edson - Estudante de Ciência da Computação.

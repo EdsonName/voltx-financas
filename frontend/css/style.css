@@ -89,3 +89,102 @@ button:hover {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
+
+/* Estilos da Tabela de Histórico */
+.history-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.receita-text { color: #28a745; font-weight: bold; }
+.despesa-text { color: #dc3545; font-weight: bold; }
+
+.btn-acao {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-right: 5px;
+    color: white;
+}
+
+.btn-editar { background-color: #ffc107; color: #000; }
+.btn-editar:hover { background-color: #e0a800; }
+
+.btn-excluir { background-color: #dc3545; }
+.btn-excluir:hover { background-color: #c82333; }
+
+/* =========================================
+   Sistema de Notificações (Toast)
+   ========================================= */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 0.95rem;
+    min-width: 280px;
+    
+    /* Animação de entrada */
+    opacity: 0;
+    transform: translateX(-100%); /* Começa fora da tela à esquerda */
+    animation: slideInLeft 0.4s forwards;
+}
+
+.toast.success { border-left: 6px solid #28a745; }
+.toast.error { border-left: 6px solid #dc3545; }
+
+/* Classe ativada pelo JS para sumir */
+.toast.fade-out {
+    animation: fadeOut 0.4s forwards;
+}
+
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+}
