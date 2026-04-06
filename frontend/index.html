@@ -4,34 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VoltX - Finanças</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=10">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <header class="dashboard-header">
             <div>
-                <h2>Resumo: <span id="mes-atual">Abril/2026</span></h2>
-                <p>Data Atual: <span id="data-atual">-</span></p>
+                <h2>Resumo Financeiro</h2>
+                <div class="filtros-data">
+                    <select id="select-mes">
+                        <option value="1">Janeiro</option>
+                        <option value="2">Fevereiro</option>
+                        <option value="3">Março</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Maio</option>
+                        <option value="6">Junho</option>
+                        <option value="7">Julho</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                    <input type="number" id="select-ano" value="2026" style="width: 80px; min-width: 80px;">
+                    <button id="btn-filtrar" class="btn-acao" style="background: #28a745; margin-left: 5px;">Filtrar</button>
+                </div>
+                <p style="margin-top: 5px;">Data Atual: <span id="data-atual">-</span></p>
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <p>Dias Úteis Totais</p>
+                    <p>Dias Úteis</p>
                     <h3 id="dias-uteis-totais">0</h3>
                 </div>
                 <div class="stat-card">
-                    <p>Feriados no Mês</p>
+                    <p>Feriados</p>
                     <h3 id="feriados-mes">0</h3>
                 </div>
                 <div class="stat-card">
-                    <p>Dias Restantes</p>
+                    <p>Restantes</p>
                     <h3 id="dias-restantes">0</h3>
+                </div>
+                <div class="stat-card destaque-saldo">
+                    <p>Saldo Líquido</p>
+                    <h3 id="saldo-liquido">R$ 0,00</h3>
                 </div>
             </div>
         </header>
 
         <section class="form-section">
-            <h3>Adicionar Lançamento</h3>
+            <h3>Adicionar / Editar Lançamento</h3>
             <form id="form-transacao">
                 <select id="tipo" required>
                     <option value="receita">Receita (+)</option>
@@ -41,17 +63,17 @@
                 <input type="number" id="valor" placeholder="Valor (R$)" step="0.01" required>
                 <input type="date" id="data" required>
                 <input type="text" id="categoria" placeholder="Categoria (ex: Gastos Fixos)" required>
-                <button type="submit">Salvar</button>
+                <button type="submit">Salvar Lançamento</button>
             </form>
         </section>
 
         <section class="charts-section">
             <div class="chart-container">
-                <h3>Balanço do Mês (Receitas vs Despesas)</h3>
+                <h3>Balanço do Mês</h3>
                 <canvas id="pizzaChart"></canvas>
             </div>
             <div class="chart-container">
-                <h3>Evolução Semanal</h3>
+                <h3>Evolução de Lançamentos</h3>
                 <canvas id="barrasChart"></canvas>
             </div>
         </section>
@@ -70,18 +92,28 @@
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="corpo-tabela">
-                        </tbody>
+                    <tbody id="corpo-tabela"></tbody>
                 </table>
             </div>
         </section>
-
         <input type="hidden" id="transacao-id-editando" value="">
+    </div> 
+
+    <div id="modal-detalhes" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-titulo">Detalhes do Dia</h3>
+                <button id="btn-fechar-modal" class="btn-fechar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <ul id="lista-detalhes" style="list-style: none; padding: 0;"></ul>
+            </div>
+        </div>
     </div>
 
     <div id="toast-container"></div>
 
-    <script src="js/app.js"></script>
-    <script src="js/charts.js"></script>
+    <script src="js/app.js?v=10"></script>
+    <script src="js/charts.js?v=10"></script>
 </body>
 </html>

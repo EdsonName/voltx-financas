@@ -27,17 +27,16 @@ body {
     margin-bottom: 20px;
 }
 
-.stats-grid {
-    display: flex;
-    gap: 15px;
-}
+.stats-grid { display: flex; gap: 15px; }
+.stat-card { background: #e9ecef; padding: 15px 25px; border-radius: 8px; text-align: center; }
 
-.stat-card {
-    background: #e9ecef;
-    padding: 15px 25px;
-    border-radius: 8px;
-    text-align: center;
+/* Estilos para o Card de Saldo Líquido */
+.destaque-saldo { 
+    background-color: #212529; /* Fundo mais escuro para destacar */
+    border: 1px solid #444;
 }
+#saldo-liquido.positivo { color: #28a745; } /* Verde se sobrou dinheiro */
+#saldo-liquido.negativo { color: #dc3545; } /* Vermelho se faltou */
 
 .form-section {
     background: #fff;
@@ -47,144 +46,130 @@ body {
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-form {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-}
+form { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+input, select, button { padding: 10px; border: 1px solid #ccc; border-radius: 5px; flex: 1; min-width: 150px; }
 
-input, select, button {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    flex: 1;
-    min-width: 150px;
-}
+button { background: #007bff; color: white; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; }
+button:hover { background: #0056b3; }
 
-button {
-    background: #007bff;
-    color: white;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-}
+.charts-section { display: flex; gap: 20px; flex-wrap: wrap; }
+.chart-container { flex: 1; min-width: 400px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 
-button:hover {
-    background: #0056b3;
-}
-
-.charts-section {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.chart-container {
-    flex: 1;
-    min-width: 400px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-/* Estilos da Tabela de Histórico */
-.history-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.table-responsive {
-    overflow-x: auto;
-    margin-top: 15px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-th, td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #f8f9fa;
-    font-weight: bold;
-}
-
+/* --- Estilos da Tabela --- */
+.history-section { background: #fff; padding: 20px; border-radius: 10px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.table-responsive { overflow-x: auto; margin-top: 15px; }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+th { background-color: #f8f9fa; font-weight: bold; }
 .receita-text { color: #28a745; font-weight: bold; }
 .despesa-text { color: #dc3545; font-weight: bold; }
 
-.btn-acao {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    margin-right: 5px;
-    color: white;
-}
-
+.btn-acao { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-right: 5px; color: white; flex: none; min-width: auto;}
 .btn-editar { background-color: #ffc107; color: #000; }
 .btn-editar:hover { background-color: #e0a800; }
-
 .btn-excluir { background-color: #dc3545; }
 .btn-excluir:hover { background-color: #c82333; }
 
-/* =========================================
-   Sistema de Notificações (Toast)
-   ========================================= */
+
+/* --- Sistema de Notificações (Toast) --- */
 #toast-container {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 9999;
+    bottom: 30px;
+    left: 30px;
+    z-index: 99999;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
 .toast {
-    background-color: #333;
+    background-color: #212529;
     color: #fff;
-    padding: 15px 25px;
+    padding: 16px 24px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    font-size: 0.95rem;
-    min-width: 280px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    font-size: 1rem;
+    font-weight: 500;
+    min-width: 300px;
     
-    /* Animação de entrada */
-    opacity: 0;
-    transform: translateX(-100%); /* Começa fora da tela à esquerda */
-    animation: slideInLeft 0.4s forwards;
+    /* MODIFICADO: Já aparece 100% visível e na posição correta */
+    opacity: 1; 
+    transform: translateX(0);
+    
+    /* Mantém apenas o tempo do balanço */
+    animation: gangorra 1.5s ease-out forwards;
+    transform-origin: bottom center;
 }
 
-.toast.success { border-left: 6px solid #28a745; }
-.toast.error { border-left: 6px solid #dc3545; }
+.toast.success { border-left: 8px solid #28a745; }
+.toast.error { border-left: 8px solid #dc3545; }
+.toast.fade-out { animation: fadeOut 0.5s ease-in forwards; }
 
-/* Classe ativada pelo JS para sumir */
-.toast.fade-out {
-    animation: fadeOut 0.4s forwards;
-}
-
-@keyframes slideInLeft {
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+/* MODIFICADO: A animação agora só faz o balanço, sem fade-in ou slide */
+@keyframes gangorra {
+    0% { transform: rotate(0deg); }
+    15% { transform: rotate(5deg); } 
+    30% { transform: rotate(-5deg); }
+    45% { transform: rotate(3deg); }
+    60% { transform: rotate(-2deg); }
+    75% { transform: rotate(1deg); }
+    100% { transform: rotate(0deg); }
 }
 
 @keyframes fadeOut {
-    to {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
+    to { opacity: 0; transform: translateX(-20px); }
+}
+
+.filtros-data {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.filtros-data select, .filtros-data input {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    height: 35px;
+}
+
+/* =========================================
+   MODAL DE DETALHES DO GRÁFICO
+   ========================================= */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); /* Fundo escurecido */
+    display: flex; justify-content: center; align-items: center;
+    z-index: 10000;
+}
+
+.modal-content {
+    background: #fff; padding: 25px; border-radius: 10px;
+    width: 90%; max-width: 450px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;
+}
+
+.modal-header h3 { color: #333; margin: 0; }
+
+.btn-fechar {
+    background: none; border: none; font-size: 1.8rem;
+    cursor: pointer; color: #888; flex: none; min-width: auto; padding: 0 10px;
+}
+.btn-fechar:hover { color: #dc3545; }
+
+.detalhe-item {
+    display: flex; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px dashed #eee;
+    color: #444; font-size: 0.95rem;
+}
+
+.detalhe-total {
+    display: flex; justify-content: space-between;
+    padding-top: 15px; margin-top: 5px;
+    border-top: 2px solid #ccc; font-weight: bold; color: #111; font-size: 1.1rem;
 }

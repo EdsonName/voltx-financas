@@ -1,44 +1,27 @@
 const API_URL = 'http://127.0.0.1:8000';
 let transacoesDoMes = [];
 
+let mesSelecionado = new Date().getMonth() + 1;
+let anoSelecionado = new Date().getFullYear();
+
 document.addEventListener('DOMContentLoaded', async () => {
+    document.getElementById('select-mes').value = mesSelecionado;
+    document.getElementById('select-ano').value = anoSelecionado;
+
+    document.getElementById('btn-filtrar').addEventListener('click', async () => {
+        mesSelecionado = parseInt(document.getElementById('select-mes').value);
+        anoSelecionado = parseInt(document.getElementById('select-ano').value);
+        await carregarDadosIniciais(); 
+        mostrarToast(`Exibindo dados de ${mesSelecionado}/${anoSelecionado}`, 'success');
+    });
+
     configurarCabecalhoDatas();
     await carregarDadosIniciais();
 });
 
 function configurarCabecalhoDatas() {
     const hoje = new Date();
-    const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-    document.getElementById('mes-atual').innerText = `${meses[hoje.getMonth()]}/${hoje.getFullYear()}`;
     document.getElementById('data-atual').innerText = hoje.toLocaleDateString('pt-BR');
-}
-
-async function carregarDadosIniciais() {
-    const hoje = new Date();
-    const ano = hoje.getFullYear();
-    const mes = hoje.getMonth() + 1;
-
-    try {
-        const resResumo = await fetch(`${API_URL}/resumo/${ano}/${mes}`);
-        if(resResumo.ok) {
-            const resumo = await resResumo.json();
-            document.getElementById('dias-uteis-totais').innerText = resumo.dias_uteis_totais;
-            document.getElementById('feriados-mes').innerText = resumo.feriados;
-            let diasPassados = hoje.getDate();
-            let uteisPassados = Math.floor(diasPassados * (resumo.dias_uteis_totais / 30)); 
-            document.getElementById('dias-restantes').innerText = resumo.dias_uteis_totais - uteisPassados;
-        }
-
-        const resTransacoes = await fetch(`${API_URL}/transacoes/`);
-        if(resTransacoes.ok) {
-            transacoesDoMes = await resTransacoes.json();
-            if (typeof atualizarGraficos === "function") atualizarGraficos(transacoesDoMes);
-            renderizarTabela(transacoesDoMes);
-        }
-    } catch (error) {
-        console.error("Erro ao conectar com o servidor.", error);
-        mostrarToast("Erro de conexão com o banco de dados.", "error");
-    }
 }
 
 function renderizarTabela(transacoes) {
@@ -67,6 +50,62 @@ function renderizarTabela(transacoes) {
     });
 }
 
+async function carregarDadosIniciais() {
+    try {
+        const resResumo = await fetch(`${API_URL}/resumo/${anoSelecionado}/${mesSelecionado}`);
+        if(resResumo.ok) {
+            const resumo = await resResumo.json();
+            document.getElementById('dias-uteis-totais').innerText = resumo.dias_uteis_totais;
+            document.getElementById('feriados-mes').innerText = resumo.feriados;
+            
+            const hoje = new Date();
+            if (mesSelecionado === (hoje.getMonth() + 1) && anoSelecionado === hoje.getFullYear()) {
+                let diasPassados = hoje.getDate();
+                let uteisPassados = Math.floor(diasPassados * (resumo.dias_uteis_totais / 30)); 
+                document.getElementById('dias-restantes').innerText = resumo.dias_uteis_totais - uteisPassados;
+            } else if (anoSelecionado > hoje.getFullYear() || (anoSelecionado === hoje.getFullYear() && mesSelecionado > hoje.getMonth() + 1)) {
+                document.getElementById('dias-restantes').innerText = resumo.dias_uteis_totais;
+            } else {
+                document.getElementById('dias-restantes').innerText = "0";
+            }
+        }
+
+        const resTransacoes = await fetch(`${API_URL}/transacoes/?ano=${anoSelecionado}&mes=${mesSelecionado}`);
+        if(resTransacoes.ok) {
+            transacoesDoMes = await resTransacoes.json();
+            
+            // --- MATEMÁTICA DO SALDO BLINDADA ---
+            let receitas = 0;
+            let despesas = 0;
+            transacoesDoMes.forEach(t => {
+                if (t.tipo === 'receita') receitas += t.valor;
+                else despesas += t.valor;
+            });
+            
+            const saldo = receitas - despesas;
+            const saldoEl = document.getElementById('saldo-liquido');
+            
+            if (saldoEl) {
+                saldoEl.innerText = saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                saldoEl.classList.remove('positivo', 'negativo');
+                if (saldo >= 0) {
+                    saldoEl.classList.add('positivo');
+                } else {
+                    saldoEl.classList.add('negativo');
+                }
+            }
+
+            // Garante que a função de gráficos só é chamada se existir
+            if (typeof atualizarGraficos === "function") {
+                atualizarGraficos(transacoesDoMes);
+            }
+            renderizarTabela(transacoesDoMes);
+        }
+    } catch (error) {
+        console.error("Erro no carregamento.", error);
+    }
+}
+
 function prepararEdicao(id) {
     const transacao = transacoesDoMes.find(t => t.id === id);
     if(transacao) {
@@ -83,18 +122,14 @@ function prepararEdicao(id) {
 }
 
 async function deletarTransacao(id) {
-    if(confirm("Tem certeza que deseja excluir este lançamento?")) {
+    if(confirm("Tem certeza que deseja excluir?")) {
         try {
             const resposta = await fetch(`${API_URL}/transacoes/${id}`, { method: 'DELETE' });
             if(resposta.ok) {
                 mostrarToast("Lançamento excluído com sucesso!", "success");
                 await carregarDadosIniciais(); 
-            } else {
-                mostrarToast("Erro ao excluir o lançamento.", "error");
             }
-        } catch(error) {
-            mostrarToast("Erro de conexão ao tentar excluir.", "error");
-        }
+        } catch(error) {}
     }
 }
 
@@ -129,33 +164,21 @@ document.getElementById('form-transacao').addEventListener('submit', async (e) =
             document.getElementById('form-transacao').reset();
             document.getElementById('transacao-id-editando').value = ""; 
             document.querySelector('#form-transacao button').innerText = 'Salvar Lançamento'; 
-            
-            mostrarToast(metodo === 'PUT' ? 'Lançamento atualizado com sucesso!' : 'Lançamento salvo com sucesso!', 'success');
+            mostrarToast('Salvo com sucesso!', 'success');
             await carregarDadosIniciais(); 
-        } else {
-            mostrarToast('Erro ao salvar. Verifique os dados.', 'error');
         }
-    } catch (error) {
-        mostrarToast('Servidor offline ou inacessível.', 'error');
-    }
+    } catch (error) {}
 });
-
 
 function mostrarToast(mensagem, tipo = 'success') {
     const container = document.getElementById('toast-container');
-    if (!container) return;
-
+    if (!container) return; 
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
     toast.innerText = mensagem;
-
     container.appendChild(toast);
-
-    // Alterado para 8000 (8 segundos) para dar tempo de ler após o balanço
     setTimeout(() => {
         toast.classList.add('fade-out');
-        toast.addEventListener('animationend', () => {
-            toast.remove();
-        });
+        toast.addEventListener('animationend', () => toast.remove());
     }, 8000); 
 }
